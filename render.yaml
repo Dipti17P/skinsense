@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: skinsense
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn skinsense.wsgi:application"
+    plan: free
