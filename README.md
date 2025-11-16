@@ -169,70 +169,6 @@ skinsense/
 └── README.md
 ```
 
-## 🎨 Design Features
-
-### Color Palette
-- Primary Gradient: `#667eea` to `#764ba2` (Purple-Pink)
-- Background: White with subtle gradients
-- Accents: Purple, Pink, and Light shades
-
-### Animations
-- **Page Load**: Smooth fade-in with blur effect
-- **Floating Particles**: 9 animated particles with rotation
-- **Background Circles**: Pulsing and rotating gradients
-- **Button Effects**: Ripple effects and scale transforms
-- **Card Hover**: Lift and shadow animations
-- **Icon Rotations**: 360° spins on hover
-- **Smooth Transitions**: cubic-bezier timing throughout
-
-## 🗄️ Database Models
-
-### Quiz Model
-```python
-- Question: Text field for quiz questions
-- Options: JSON field with answer choices
-- Skin type mapping
-```
-
-### Product Model
-```python
-- name: Product name
-- brand: Brand name
-- product_type: Category (Moisturizer, Cleanser, etc.)
-- skin_type: Target skin type
-- description: Product details
-- image: Product image
-- link: Purchase link (Flipkart)
-```
-
-### User Model
-- Django's built-in User model with authentication
-
-## 🔧 Management Commands
-
-### Populate Quiz Questions
-```bash
-python manage.py populate_quiz
-```
-Creates 5 quiz questions to determine skin type.
-
-### Populate Products
-```bash
-python manage.py populate_products
-```
-Adds 25 skincare products to the database.
-
-### Add Flipkart Links
-```bash
-python manage.py add_flipkart_links
-```
-Adds purchase links to all products.
-
-### Map Product Images
-```bash
-python manage.py map_product_images
-```
-Maps local images to product entries.
 
 ## 🌐 Routes
 
@@ -303,23 +239,9 @@ Maps local images to product entries.
 - Minimized CSS/JS
 - Efficient database queries
 
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
 ## 👨‍💻 Author
 
-**Team SkinSense**
+**Dipti Patil**
 
 ## 🙏 Acknowledgments
 
@@ -330,21 +252,8 @@ This project is licensed under the MIT License.
 - Google Fonts for Poppins font
 - Django community for excellent documentation
 
-## 📞 Support
 
-For support, email support@skinsense.com or open an issue in the repository.
-
-## 🗺️ Roadmap
-
-- [ ] AI-powered skin analysis
-- [ ] Mobile app (iOS & Android)
-- [ ] Social features (reviews, ratings)
-- [ ] Skincare routine builder
-- [ ] Integration with more e-commerce platforms
-- [ ] Multi-language support
-- [ ] Dark mode theme
-- [ ] Product comparison feature
 
 ---
 
-**Made with ❤️ by Team SkinSense** | © 2025 SkinSense. All rights reserved.
+**Made with ❤️ by Dipti** | © 2025 SkinSense. All rights reserved.
