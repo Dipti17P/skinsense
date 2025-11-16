@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkinSense – Smart Skin Product Recommender</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f8d7ff 0%, #d9e4ff 50%, #e6e9ff 100%);
+      min-height: 100vh;
+      margin: 0;
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    /* 🌸 Navbar */
+    .navbar {
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.8rem 1rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #7b2ff7 !important;
+      letter-spacing: 0.5px;
+    }
+
+    /* 🌼 Buttons */
+    .btn-primary {
+      background: linear-gradient(90deg, #8c52ff, #5ce1e6);
+      border: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      color: #fff !important;
+    }
+
+    .btn-outline-primary {
+      border-color: #8c52ff;
+      color: #8c52ff;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-primary:hover {
+      background: linear-gradient(90deg, #8c52ff, #5ce1e6);
+      color: #fff;
+      border: none;
+      transform: scale(1.05);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 12px rgba(92, 225, 230, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-danger {
+      border-color: #ff6b81;
+      color: #ff6b81;
+    }
+
+    .btn-outline-danger:hover {
+      background: #ff6b81;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    /* 🪞 Card Style */
+    .card {
+      border: none;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 🌈 Content container animation */
+    .container {
+      animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 💫 Footer */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: #555;
+      padding: 12px 0;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(6px);
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      z-index: 1000;
+    }
+
+    footer a {
+      color: #7b2ff7;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 🌸 Navbar -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <span style="font-size: 1.8rem; margin-right: 0.5rem;">🌸</span>
+        <span>SkinSense</span>
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'product_list' %}" style="color: #7b2ff7; font-weight: 500;">🛍️ Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'community_hub' %}" style="color: #7b2ff7; font-weight: 500;">💬 Community</a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'reminder_list' %}" style="color: #7b2ff7; font-weight: 500;">⏰ Reminders</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'view_cart' %}" style="color: #7b2ff7; font-weight: 500;">🛒 Cart</a>
+          </li>
+          {% endif %}
+        </ul>
+
+        <div class="d-flex align-items-center gap-3"> 
+          {% if user.is_authenticated %}
+            <span class="me-2 text-dark fw-medium d-none d-md-inline">Hi, {{ user.username }} 👋</span>
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm" style="border-radius: 2rem;">Logout</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm me-2" style="border-radius: 2rem;">Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary btn-sm" style="border-radius: 2rem;">Sign Up</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🌷 Main Content -->
+  <div class="container mt-5">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- 🌼 Footer -->
+  <footer>
+    © 2025 <a href="/">SkinSense</a> | Smart Skincare Recommendation System 💧
+  </footer>
+
+  <!-- Bootstrap JS Bundle (required for tabs and other components) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

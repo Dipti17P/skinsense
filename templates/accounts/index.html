@@ -1,0 +1,710 @@
+{% load static %}
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkinSense | Smart Skin Product Recommender</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="{% static 'images/logo.png' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%),
+                  url('https://images.unsplash.com/photo-1552693673-1bf958298935?w=1920&q=80') center/cover fixed;
+      position: relative;
+      overflow-x: hidden;
+      animation: pageLoad 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes pageLoad {
+      from {
+        opacity: 0;
+        filter: blur(10px);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0px);
+      }
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.97) 0%, rgba(250, 245, 255, 0.97) 100%);
+      z-index: 0;
+      animation: backgroundShift 15s ease infinite;
+    }
+
+    @keyframes backgroundShift {
+      0%, 100% { background: linear-gradient(135deg, rgba(255, 255, 255, 0.97) 0%, rgba(250, 245, 255, 0.97) 100%); }
+      33% { background: linear-gradient(135deg, rgba(250, 245, 255, 0.97) 0%, rgba(245, 250, 255, 0.97) 100%); }
+      66% { background: linear-gradient(135deg, rgba(245, 250, 255, 0.97) 0%, rgba(255, 245, 250, 0.97) 100%); }
+    }
+
+    /* Animated Background Circles */
+    body::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, transparent 70%);
+      top: -300px;
+      right: -300px;
+      z-index: 0;
+      animation: perfectPulse 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes perfectPulse {
+      0%, 100% { 
+        transform: scale(1) rotate(0deg); 
+        opacity: 0.5; 
+        filter: blur(0px);
+      }
+      50% { 
+        transform: scale(1.4) rotate(180deg); 
+        opacity: 0.9; 
+        filter: blur(5px);
+      }
+    }
+
+    .circle-decoration {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(118, 75, 162, 0.15) 0%, transparent 70%);
+      bottom: -250px;
+      left: -250px;
+      z-index: 0;
+      animation: smoothFloat 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes smoothFloat {
+      0%, 100% { 
+        transform: translate(0, 0) scale(1) rotate(0deg); 
+        filter: blur(0px);
+      }
+      33% { 
+        transform: translate(60px, -50px) scale(1.2) rotate(120deg); 
+        filter: blur(3px);
+      }
+      66% { 
+        transform: translate(-30px, -80px) scale(1.1) rotate(240deg); 
+        filter: blur(2px);
+      }
+    }
+
+    /* Particles effect */
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(102, 126, 234, 0.3);
+      border-radius: 50%;
+      animation: perfectFloat 20s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      z-index: 0;
+    }
+
+    @keyframes perfectFloat {
+      0% { 
+        transform: translateY(100vh) translateX(0) scale(0) rotate(0deg); 
+        opacity: 0; 
+      }
+      10% { 
+        opacity: 1; 
+        transform: translateY(80vh) translateX(20px) scale(0.5) rotate(90deg); 
+      }
+      50% { 
+        opacity: 1; 
+        transform: translateY(50vh) translateX(60px) scale(1) rotate(180deg); 
+      }
+      90% { 
+        opacity: 1; 
+        transform: translateY(20vh) translateX(80px) scale(0.8) rotate(270deg); 
+      }
+      100% { 
+        transform: translateY(-10vh) translateX(100px) scale(0) rotate(360deg); 
+        opacity: 0; 
+      }
+    }
+
+    .particle:nth-child(1) { left: 10%; animation-duration: 18s; animation-delay: 0s; }
+    .particle:nth-child(2) { left: 20%; animation-duration: 22s; animation-delay: 2s; }
+    .particle:nth-child(3) { left: 30%; animation-duration: 19s; animation-delay: 4s; }
+    .particle:nth-child(4) { left: 40%; animation-duration: 21s; animation-delay: 1s; }
+    .particle:nth-child(5) { left: 50%; animation-duration: 20s; animation-delay: 3s; }
+    .particle:nth-child(6) { left: 60%; animation-duration: 24s; animation-delay: 5s; }
+    .particle:nth-child(7) { left: 70%; animation-duration: 23s; animation-delay: 2.5s; }
+    .particle:nth-child(8) { left: 80%; animation-duration: 19s; animation-delay: 4.5s; }
+    .particle:nth-child(9) { left: 90%; animation-duration: 21s; animation-delay: 1.5s; }
+
+    * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 3s ease infinite;
+      background-size: 200% auto;
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% center; }
+      50% { background-position: 100% center; }
+    }
+
+    .hero-badge {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(102, 126, 234, 0.3);
+      padding: 0.75rem 2rem;
+      border-radius: 3rem;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      color: #667eea;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+      position: relative;
+      overflow: hidden;
+      animation: smoothBounce 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards;
+    }
+
+    @keyframes smoothBounce {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-50px);
+      }
+      50% {
+        transform: scale(1.1) translateY(0);
+      }
+      70% {
+        transform: scale(0.95) translateY(0);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .hero-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+      transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hero-badge:hover::before {
+      left: 100%;
+    }
+
+    .hero-badge::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+      opacity: 0;
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hero-badge:hover::after {
+      opacity: 1;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .hero-badge:hover::after {
+      opacity: 1;
+    }
+
+    .btn-gradient {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 10px 35px rgba(102, 126, 234, 0.5);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      will-change: transform;
+    }
+
+    .btn-gradient::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-gradient:hover::before {
+      opacity: 1;
+    }
+
+    .btn-gradient::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-gradient:hover::after {
+      width: 400px;
+      height: 400px;
+    }
+
+    .btn-gradient:active {
+      transform: translateY(-2px) scale(0.98);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-gradient:hover {
+      transform: translateY(-7px) scale(1.03);
+      box-shadow: 0 25px 60px rgba(102, 126, 234, 0.8);
+    }
+
+    .btn-gradient > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(102, 126, 234, 0.15);
+      border-radius: 2rem;
+      padding: 2.5rem;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      position: relative;
+      overflow: hidden;
+      will-change: transform;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(102, 126, 234, 0.08) 50%, transparent 70%);
+      transform: rotate(45deg);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+      animation: perfectShine 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes perfectShine {
+      0% { 
+        transform: rotate(45deg) translate(-100%, -100%); 
+      }
+      100% { 
+        transform: rotate(45deg) translate(100%, 100%); 
+      }
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(102, 126, 234, 0.25);
+      border-color: rgba(102, 126, 234, 0.4);
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .feature-card .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border-radius: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+      will-change: transform;
+    }
+
+    .feature-card:hover .icon-wrapper {
+      transform: scale(1.2) rotate(360deg);
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    .floating {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border-radius: 1.5rem;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid rgba(102, 126, 234, 0.1);
+      position: relative;
+      overflow: hidden;
+      animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+
+    @keyframes scaleIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .stat-badge:nth-child(1) { animation-delay: 0.1s; }
+    .stat-badge:nth-child(2) { animation-delay: 0.2s; }
+    .stat-badge:nth-child(3) { animation-delay: 0.3s; }
+    .stat-badge:nth-child(4) { animation-delay: 0.4s; }
+
+    .stat-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.15), transparent);
+      transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stat-badge:hover::before {
+      left: 100%;
+    }
+
+    .stat-badge:hover {
+      transform: translateY(-10px) scale(1.08);
+      box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+      border-color: rgba(102, 126, 234, 0.4);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+    }
+
+    .sparkle {
+      animation: perfectSparkle 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      display: inline-block;
+      will-change: transform;
+    }
+
+    @keyframes perfectSparkle {
+      0%, 100% { 
+        opacity: 1; 
+        transform: scale(1) rotate(0deg); 
+        filter: brightness(1);
+      }
+      50% { 
+        opacity: 0.8; 
+        transform: scale(1.15) rotate(180deg); 
+        filter: brightness(1.3);
+      }
+    }
+
+    .hero-title {
+      animation: smoothFadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes smoothFadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .btn-secondary {
+      background: white;
+      border: 3px solid;
+      border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-secondary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      transition: left 0.4s ease;
+    }
+
+    .btn-secondary:hover::before {
+      left: 0;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .trust-badge {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      border: 2px solid rgba(102, 126, 234, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .trust-badge:hover {
+      transform: translateY(-3px);
+      border-color: rgba(102, 126, 234, 0.3);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+    }
+
+    .glow-effect {
+      position: relative;
+    }
+
+    .glow-effect::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: inherit;
+      z-index: -1;
+    }
+
+    .glow-effect:hover::before {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+  <!-- Floating particles -->
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  
+  <div class="circle-decoration"></div>
+
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center bg-white/95 backdrop-blur-xl shadow-xl px-8 py-5 sticky top-0 z-50 border-b-2 border-purple-100 glow-effect">
+    <div class="flex items-center gap-3">
+      <img src="{% static 'images/logo.png' %}" alt="SkinSense Logo" class="w-12 h-12 object-contain floating" onerror="this.style.display='none'">
+      <h1 class="text-4xl font-extrabold tracking-wide gradient-text">
+        SkinSense
+      </h1>
+    </div>
+
+    <div class="flex gap-4 items-center">
+      {% if user.is_authenticated %}
+        <span class="text-gray-700 font-bold px-5 py-2.5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-full shadow-md">
+          <span class="sparkle">👋</span> Hi, {{ user.username }}!
+        </span>
+        <a href="{% url 'logout' %}"
+           class="bg-gray-100 text-gray-700 px-6 py-2.5 rounded-full font-bold hover:bg-gray-200 transition-all duration-300 hover:shadow-lg border-2 border-gray-200">
+           Logout
+        </a>
+      {% else %}
+        <a href="{% url 'login' %}"
+           class="text-purple-600 font-bold border-3 border-purple-500 px-6 py-2.5 rounded-full hover:bg-purple-50 transition-all duration-300 shadow-md hover:shadow-xl">
+           Login
+        </a>
+        <a href="{% url 'signup' %}"
+           class="btn-gradient text-white px-7 py-2.5 rounded-full font-bold">
+           Sign Up
+        </a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="flex flex-col items-center justify-center flex-grow text-center px-6 py-20">
+    <div class="hero-badge floating">
+      <span class="sparkle">✨</span> AI-Powered Skincare Recommendations
+    </div>
+    
+    <h2 class="text-6xl md:text-8xl font-extrabold text-gray-800 mb-8 leading-tight hero-title">
+      Discover Your Perfect <br><span class="gradient-text">Skincare Match</span> <span class="sparkle">💎</span>
+    </h2>
+    
+    <p class="text-xl md:text-2xl text-gray-600 max-w-4xl mb-14 font-light leading-relaxed">
+      Take our smart skin quiz and get personalized product recommendations made just for your unique skin type. 
+      <span class="font-semibold gradient-text">Join thousands</span> of happy users!
+    </p>
+
+    <!-- Feature Stats -->
+    <div class="flex flex-wrap gap-8 justify-center mb-14">
+      <div class="stat-badge">
+        <div class="stat-number gradient-text">5</div>
+        <div class="text-sm text-gray-600 font-bold uppercase tracking-wide">Questions</div>
+      </div>
+      <div class="stat-badge">
+        <div class="stat-number gradient-text">25+</div>
+        <div class="text-sm text-gray-600 font-bold uppercase tracking-wide">Products</div>
+      </div>
+      <div class="stat-badge">
+        <div class="stat-number gradient-text">2min</div>
+        <div class="text-sm text-gray-600 font-bold uppercase tracking-wide">Duration</div>
+      </div>
+      <div class="stat-badge">
+        <div class="stat-number gradient-text">100%</div>
+        <div class="text-sm text-gray-600 font-bold uppercase tracking-wide">Free</div>
+      </div>
+    </div>
+
+    {% if user.is_authenticated %}
+      <a href="{% url 'dashboard' %}"
+         class="btn-gradient text-white px-12 py-5 rounded-full text-2xl font-extrabold inline-flex items-center gap-4 mb-8">
+         <span>Go to Dashboard</span>
+         <span class="text-3xl sparkle">→</span>
+      </a>
+    {% else %}
+      <p class="text-gray-700 text-xl mb-8 font-bold">Start your skincare journey today! <span class="sparkle">🌟</span></p>
+      <div class="flex gap-6 justify-center flex-wrap mb-8">
+        <a href="{% url 'login' %}"
+           class="btn-gradient text-white px-10 py-4 rounded-full text-xl font-extrabold inline-flex items-center gap-3 hover:gap-4 transition-all">
+           <span>Login Now</span>
+           <span class="text-2xl">→</span>
+        </a>
+        <a href="{% url 'signup' %}"
+           class="btn-secondary text-purple-600 px-10 py-4 rounded-full text-xl font-extrabold hover:text-purple-700 inline-flex items-center gap-2">
+           <span>Sign Up Free</span>
+           <span class="sparkle">✨</span>
+        </a>
+      </div>
+    {% endif %}
+
+    <!-- Feature Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 max-w-6xl">
+      <div class="feature-card text-left">
+        <div class="icon-wrapper">
+          <div class="text-5xl">🎯</div>
+        </div>
+        <h3 class="text-2xl font-extrabold mb-3 gradient-text">Personalized Results</h3>
+        <p class="text-gray-600 text-lg leading-relaxed">Get recommendations tailored specifically to your unique skin type, concerns, and goals</p>
+      </div>
+      <div class="feature-card text-left">
+        <div class="icon-wrapper">
+          <div class="text-5xl sparkle">✨</div>
+        </div>
+        <h3 class="text-2xl font-extrabold mb-3 gradient-text">Smart AI Quiz</h3>
+        <p class="text-gray-600 text-lg leading-relaxed">Answer 5 quick questions powered by AI to discover your perfect skincare routine instantly</p>
+      </div>
+      <div class="feature-card text-left">
+        <div class="icon-wrapper">
+          <div class="text-5xl">🛍️</div>
+        </div>
+        <h3 class="text-2xl font-extrabold mb-3 gradient-text">Premium Brands</h3>
+        <p class="text-gray-600 text-lg leading-relaxed">Shop curated products from trusted brands, available directly on Flipkart with one click</p>
+      </div>
+    </div>
+
+    <!-- Trust Indicators -->
+    <div class="flex flex-wrap items-center justify-center gap-6 mt-16 text-gray-600">
+      <div class="trust-badge flex items-center gap-2 glow-effect">
+        <span class="text-2xl">🔒</span>
+        <span class="font-bold">100% Secure</span>
+      </div>
+      <div class="trust-badge flex items-center gap-2 glow-effect">
+        <span class="text-2xl sparkle">⚡</span>
+        <span class="font-bold">Instant Results</span>
+      </div>
+      <div class="trust-badge flex items-center gap-2 glow-effect">
+        <span class="text-2xl">💯</span>
+        <span class="font-bold">Expert Approved</span>
+      </div>
+      <div class="trust-badge flex items-center gap-2 glow-effect">
+        <span class="text-2xl sparkle">⭐</span>
+        <span class="font-bold">1000+ Happy Users</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white/95 backdrop-blur-xl text-center text-gray-600 py-8 border-t-2 border-purple-100 mt-16 shadow-2xl">
+    <div class="flex flex-col items-center justify-center gap-4">
+      <div class="flex items-center gap-3 text-xl font-semibold">
+        <span>&copy; 2025</span>
+        <span class="font-extrabold gradient-text text-2xl">SkinSense</span>
+      </div>
+      <div class="flex items-center gap-2 text-base">
+        <span>Designed with</span>
+        <span class="text-red-500 text-2xl sparkle">❤️</span>
+        <span>by Team SkinSense</span>
+      </div>
+      <div class="flex gap-6 text-sm text-gray-500 mt-2">
+        <a href="#" class="hover:text-purple-600 transition-colors font-semibold">Privacy Policy</a>
+        <span>•</span>
+        <a href="#" class="hover:text-purple-600 transition-colors font-semibold">Terms of Service</a>
+        <span>•</span>
+        <a href="#" class="hover:text-purple-600 transition-colors font-semibold">Contact Us</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

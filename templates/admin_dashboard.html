@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .admin-header {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    color: white;
+    margin-bottom: 2rem;
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+  }
+
+  .admin-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border-left: 4px solid;
+    height: 100%;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+  }
+
+  .stat-card.primary {
+    border-left-color: #667eea;
+  }
+
+  .stat-card.success {
+    border-left-color: #28a745;
+  }
+
+  .stat-card.warning {
+    border-left-color: #ffc107;
+  }
+
+  .stat-card.info {
+    border-left-color: #17a2b8;
+  }
+
+  .stat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .chart-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+  }
+
+  .chart-card h3 {
+    color: #667eea;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .progress-bar-custom {
+    height: 30px;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.6s ease;
+    width: 0;
+  }
+
+  .table-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+  }
+
+  .table-card table {
+    margin-bottom: 0;
+  }
+
+  .badge-skin {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .alert-card {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+    border-left: 4px solid #ffc107;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .metric-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .metric-row:last-child {
+    border-bottom: none;
+  }
+
+  .metric-label {
+    font-weight: 600;
+    color: #495057;
+  }
+
+  .metric-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #667eea;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-header h2 {
+    color: #667eea;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .activity-item {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background 0.3s ease;
+  }
+
+  .activity-item:hover {
+    background: rgba(102, 126, 234, 0.05);
+  }
+
+  .activity-item:last-child {
+    border-bottom: none;
+  }
+</style>
+
+<div class="admin-header animate__animated animate__fadeInDown">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1>📊 Admin Analytics Dashboard</h1>
+      <p class="mb-0" style="font-size: 1.1rem; opacity: 0.95;">Business insights and performance metrics</p>
+    </div>
+    <div>
+      <a href="{% url 'dashboard' %}" class="btn btn-light btn-lg">← User Dashboard</a>
+    </div>
+  </div>
+</div>
+
+<!-- Key Metrics -->
+<div class="section-header">
+  <span style="font-size: 2rem;">📈</span>
+  <h2>Key Metrics</h2>
+</div>
+
+<div class="row g-4 mb-5">
+  <div class="col-md-3">
+    <div class="stat-card primary animate__animated animate__fadeInUp">
+      <div class="stat-icon">👥</div>
+      <div class="stat-value">{{ total_users }}</div>
+      <div class="stat-label">Total Users</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card success animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+      <div class="stat-icon">📦</div>
+      <div class="stat-value">{{ total_products }}</div>
+      <div class="stat-label">Total Products</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card warning animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value">{{ total_quizzes }}</div>
+      <div class="stat-label">Quizzes Completed</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card info animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+      <div class="stat-icon">🛒</div>
+      <div class="stat-value">{{ total_cart_items }}</div>
+      <div class="stat-label">Cart Items</div>
+    </div>
+  </div>
+</div>
+
+<!-- User Engagement -->
+<div class="row mb-5">
+  <div class="col-md-6">
+    <div class="chart-card animate__animated animate__fadeInLeft">
+      <h3>👤 User Engagement</h3>
+      <div class="metric-row">
+        <span class="metric-label">Quiz Completion Rate</span>
+        <span class="metric-value">{{ quiz_completion_rate }}%</span>
+      </div>
+      <div class="progress mb-3" style="height: 30px; border-radius: 1rem;">
+        <div class="progress-bar-custom" role="progressbar" aria-label="Quiz completion rate" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      
+      <div class="metric-row">
+        <span class="metric-label">Cart Usage Rate</span>
+        <span class="metric-value">{{ cart_usage_rate }}%</span>
+      </div>
+      <div class="progress" style="height: 30px; border-radius: 1rem;">
+        <div class="progress-bar-custom" role="progressbar" aria-label="Cart usage rate" aria-valuemin="0" aria-valuemax="100" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="chart-card animate__animated animate__fadeInRight">
+      <h3>🎯 Skin Type Distribution</h3>
+      {% for item in skin_type_distribution %}
+      <div class="metric-row">
+        <span class="metric-label">
+          <span class="badge badge-skin" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            {{ item.skin_type }}
+          </span>
+        </span>
+        <span class="metric-value">{{ item.count }} ({{ item.percentage }}%)</span>
+      </div>
+      {% empty %}
+      <p class="text-muted">No quiz data available yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Alerts -->
+{% if products_without_image > 0 or products_without_link > 0 %}
+<div class="alert-card animate__animated animate__fadeIn">
+  <h4 style="color: #ff9800; margin-bottom: 1rem;">⚠️ Action Required</h4>
+  <ul class="mb-0">{% if products_without_image > 0 %}<li><strong>{{ products_without_image }}</strong> product(s) missing images</li>{% endif %}{% if products_without_link > 0 %}<li><strong>{{ products_without_link }}</strong> product(s) missing purchase links</li>{% endif %}</ul>
+</div>
+{% endif %}
+
+<!-- Most Recommended Products -->
+<div class="section-header">
+  <span style="font-size: 2rem;">⭐</span>
+  <h2>Most Recommended Products</h2>
+</div>
+
+<div class="table-card animate__animated animate__fadeInUp">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Brand</th>
+          <th>Product Name</th>
+          <th>Skin Type</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in recommended_products %}
+        <tr>
+          <td><strong>{{ forloop.counter }}</strong></td>
+          <td><strong style="color: #667eea;">{{ product.brand }}</strong></td>
+          <td>{{ product.name|truncatewords:10 }}</td>
+          <td>
+            <span class="badge badge-skin" style="background: rgba(102, 126, 234, 0.1); color: #667eea;">
+              {{ product.skin_type|title }}
+            </span>
+          </td>
+          <td>{{ product.product_type }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">No products available</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Popular Products in Cart -->
+<div class="section-header">
+  <span style="font-size: 2rem;">🔥</span>
+  <h2>Most Added to Cart</h2>
+</div>
+
+<div class="table-card animate__animated animate__fadeInUp">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Brand</th>
+          <th>Product</th>
+          <th>Skin Type</th>
+          <th>Times Added</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in products_in_cart %}
+        <tr>
+          <td><strong>{{ forloop.counter }}</strong></td>
+          <td><strong style="color: #667eea;">{{ item.product__brand }}</strong></td>
+          <td>{{ item.product__name|truncatewords:8 }}</td>
+          <td>
+            <span class="badge badge-skin" style="background: rgba(40, 167, 69, 0.1); color: #28a745;">
+              {{ item.product__skin_type|title }}
+            </span>
+          </td>
+          <td>
+            <span class="badge bg-success">{{ item.times_added }}x</span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">No cart data available</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Product Insights -->
+<div class="row mb-5">
+  <div class="col-md-6">
+    <div class="chart-card animate__animated animate__fadeInLeft">
+      <h3>📊 Product Types</h3>
+      {% for type in product_types %}
+      <div class="metric-row">
+        <span class="metric-label">{{ type.product_type }}</span>
+        <span class="metric-value">{{ type.count }}</span>
+      </div>
+      {% empty %}
+      <p class="text-muted">No products available</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="chart-card animate__animated animate__fadeInRight">
+      <h3>🏷️ Top Brands</h3>
+      {% for brand in top_brands %}
+      <div class="metric-row">
+        <span class="metric-label">{{ brand.brand }}</span>
+        <span class="metric-value">{{ brand.product_count }}</span>
+      </div>
+      {% empty %}
+      <p class="text-muted">No brands available</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Recent Quiz Activity -->
+<div class="section-header">
+  <span style="font-size: 2rem;">📝</span>
+  <h2>Recent Quiz Activity</h2>
+</div>
+
+<div class="table-card animate__animated animate__fadeInUp">
+  <div style="max-height: 400px; overflow-y: auto;">
+    {% for activity in recent_quiz_activity %}
+    <div class="activity-item">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <strong style="color: #667eea;">{{ activity.user.username }}</strong>
+          <span class="text-muted">answered</span>
+          <strong>{{ activity.question.text|truncatewords:10 }}</strong>
+        </div>
+        <span class="badge badge-skin" style="background: rgba(102, 126, 234, 0.1); color: #667eea;">
+          {{ activity.option.skin_type|title }}
+        </span>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted">No quiz activity yet</p>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="text-center mt-5 mb-4">
+  <p class="text-muted">Last updated: {{ today|date:"F d, Y g:i A" }}</p>
+  <a href="{% url 'dashboard' %}" class="btn btn-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 0.75rem; padding: 1rem 2.5rem; font-weight: 600;">
+    ← Back to User Dashboard
+  </a>
+</div>
+
+<script>
+  // Animate progress bars on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.progress-bar-custom');
+    
+    // Quiz completion rate
+    if (progressBars[0]) {
+      setTimeout(() => {
+        progressBars[0].style.width = '{{ quiz_completion_rate }}%';
+      }, 300);
+    }
+    
+    // Cart usage rate
+    if (progressBars[1]) {
+      setTimeout(() => {
+        progressBars[1].style.width = '{{ cart_usage_rate }}%';
+      }, 600);
+    }
+  });
+</script>
+
+{% endblock %}

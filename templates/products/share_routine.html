@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Share Your Routine - SkinSense{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<style>
+    .form-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 40px;
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 8px;
+    }
+    
+    .form-control, .form-select {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        padding: 12px;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .step-card {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border-left: 5px solid #667eea;
+        transition: all 0.3s;
+    }
+    
+    .step-card:hover {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .step-number {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+    
+    .btn-add-step {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        transition: all 0.3s;
+        font-weight: bold;
+    }
+    
+    .btn-add-step:hover {
+        background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        color: white;
+        transform: scale(1.05);
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 15px 50px;
+        border-radius: 25px;
+        transition: all 0.3s;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    
+    .btn-submit:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        color: white;
+        transform: scale(1.05);
+    }
+    
+    .info-box {
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-left: 4px solid #667eea;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="form-header animate__animated animate__fadeIn">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">✨ Share Your Skincare Routine</h1>
+        <p class="lead">Help others by sharing your skincare journey and favorite products</p>
+    </div>
+</div>
+
+<!-- Form -->
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="info-box animate__animated animate__fadeInDown">
+                <h5>💡 Tips for a Great Routine</h5>
+                <ul class="mb-0">
+                    <li>Be specific about product application order</li>
+                    <li>Include wait times between steps if important</li>
+                    <li>Mention any specific techniques or tips</li>
+                    <li>Be honest about your experience</li>
+                </ul>
+            </div>
+            
+            <div class="form-card animate__animated animate__fadeInUp">
+                <form method="post" action="{% url 'share_routine' %}" id="routineForm">
+                    {% csrf_token %}
+                    
+                    <!-- Basic Information -->
+                    <h4 class="mb-4" style="color: #667eea;">📝 Basic Information</h4>
+                    
+                    <div class="mb-4">
+                        <label for="title" class="form-label">Routine Title *</label>
+                        <input type="text" class="form-control" id="title" name="title" 
+                               placeholder="e.g., My Morning Glow Routine" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="description" class="form-label">Description *</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" 
+                                  placeholder="Describe your routine and its benefits..." required></textarea>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="skin_type" class="form-label">Your Skin Type *</label>
+                            <select class="form-select" id="skin_type" name="skin_type" required>
+                                <option value="">Select your skin type</option>
+                                <option value="oily">Oily</option>
+                                <option value="dry">Dry</option>
+                                <option value="combination">Combination</option>
+                                <option value="sensitive">Sensitive</option>
+                                <option value="normal">Normal</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="routine_type" class="form-label">Routine Type *</label>
+                            <select class="form-select" id="routine_type" name="routine_type" required>
+                                <option value="">Select routine type</option>
+                                <option value="morning">Morning</option>
+                                <option value="night">Night</option>
+                                <option value="both">Both (Morning & Night)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <input type="checkbox" name="is_public" value="true" checked>
+                            Make this routine public (others can view and like it)
+                        </label>
+                    </div>
+                    
+                    <hr class="my-5">
+                    
+                    <!-- Steps Section -->
+                    <h4 class="mb-4" style="color: #667eea;">📋 Routine Steps</h4>
+                    
+                    <div id="stepsContainer">
+                        <div class="step-card" data-step="1">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="step-number">1</div>
+                                <h5 class="mb-0">Step 1</h5>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Step Name *</label>
+                                <input type="text" class="form-control" name="step_name_1" 
+                                       placeholder="e.g., Cleansing" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Instructions *</label>
+                                <textarea class="form-control" name="step_instructions_1" rows="3" 
+                                          placeholder="Describe how to perform this step..." required></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label" for="step_product_1">Product (Optional)</label>
+                                <select class="form-select" id="step_product_1" name="step_product_1" aria-label="Product for step 1">
+                                    <option value="">No specific product</option>
+                                    {% for product in products %}
+                                    <option value="{{ product.id }}">{{ product.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <button type="button" class="btn btn-add-step" onclick="addStep()">
+                            ➕ Add Another Step
+                        </button>
+                    </div>
+                    
+                    <input type="hidden" name="step_count" id="step_count" value="1">
+                    
+                    <hr class="my-5">
+                    
+                    <!-- Submit -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-submit">
+                            🚀 Share My Routine
+                        </button>
+                        <div class="mt-3">
+                            <a href="{% url 'community_hub' %}" class="text-muted">Cancel and go back</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let stepCount = 1;
+
+function addStep() {
+    stepCount++;
+    document.getElementById('step_count').value = stepCount;
+    
+    const container = document.getElementById('stepsContainer');
+    const newStep = document.createElement('div');
+    newStep.className = 'step-card animate__animated animate__fadeInUp';
+    newStep.setAttribute('data-step', stepCount);
+    newStep.innerHTML = `
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="d-flex align-items-center">
+                <div class="step-number">${stepCount}</div>
+                <h5 class="mb-0">Step ${stepCount}</h5>
+            </div>
+            <button type="button" class="btn btn-sm btn-danger" onclick="removeStep(${stepCount})">
+                🗑️ Remove
+            </button>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Step Name *</label>
+            <input type="text" class="form-control" name="step_name_${stepCount}" 
+                   placeholder="e.g., Apply Serum" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Instructions *</label>
+            <textarea class="form-control" name="step_instructions_${stepCount}" rows="3" 
+                      placeholder="Describe how to perform this step..." required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label" for="step_product_${stepCount}">Product (Optional)</label>
+            <select class="form-select" id="step_product_${stepCount}" name="step_product_${stepCount}" aria-label="Product for step ${stepCount}">
+                <option value="">No specific product</option>
+                {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    `;
+    container.appendChild(newStep);
+}
+
+function removeStep(stepNum) {
+    const stepCard = document.querySelector(`[data-step="${stepNum}"]`);
+    if (stepCard) {
+        stepCard.remove();
+        stepCount--;
+        document.getElementById('step_count').value = stepCount;
+        
+        // Renumber remaining steps
+        const steps = document.querySelectorAll('.step-card');
+        steps.forEach((step, index) => {
+            const num = index + 1;
+            step.setAttribute('data-step', num);
+            step.querySelector('.step-number').textContent = num;
+            step.querySelector('h5').textContent = `Step ${num}`;
+        });
+    }
+}
+</script>
+{% endblock %}

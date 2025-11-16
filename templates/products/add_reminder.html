@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Reminder - SkinSense{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-bell"></i> Add New Skincare Reminder</h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Reminder Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" 
+                                   placeholder="e.g., Morning Cleanser, Night Moisturizer" required>
+                            <small class="form-text text-muted">Give your reminder a descriptive name</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reminder_type" class="form-label">Routine Type *</label>
+                            <select class="form-select" id="reminder_type" name="reminder_type" required>
+                                <option value="morning">Morning Routine</option>
+                                <option value="evening">Evening Routine</option>
+                                <option value="both">Both Morning & Evening</option>
+                                <option value="custom">Custom Time</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="time" class="form-label">Reminder Time *</label>
+                            <input type="time" class="form-control" id="time" name="time" required>
+                            <small class="form-text text-muted">Set the time you want to be reminded</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="frequency" class="form-label">Frequency *</label>
+                            <select class="form-select" id="frequency" name="frequency" required 
+                                    onchange="toggleCustomDays()">
+                                <option value="daily">Daily</option>
+                                <option value="weekdays">Weekdays Only</option>
+                                <option value="weekends">Weekends Only</option>
+                                <option value="custom">Custom Days</option>
+                            </select>
+                        </div>
+
+                        <div id="customDays" class="mb-3" style="display: none;">
+                            <label class="form-label">Select Days</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="monday" name="monday">
+                                    <label class="form-check-label" for="monday">Monday</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="tuesday" name="tuesday">
+                                    <label class="form-check-label" for="tuesday">Tuesday</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="wednesday" name="wednesday">
+                                    <label class="form-check-label" for="wednesday">Wednesday</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="thursday" name="thursday">
+                                    <label class="form-check-label" for="thursday">Thursday</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="friday" name="friday">
+                                    <label class="form-check-label" for="friday">Friday</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="saturday" name="saturday">
+                                    <label class="form-check-label" for="saturday">Saturday</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="sunday" name="sunday">
+                                    <label class="form-check-label" for="sunday">Sunday</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes (Optional)</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3" 
+                                      placeholder="Add any additional notes or instructions..."></textarea>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Create Reminder
+                            </button>
+                            <a href="{% url 'reminder_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleCustomDays() {
+    var frequency = document.getElementById('frequency').value;
+    var customDays = document.getElementById('customDays');
+    
+    if (frequency === 'custom') {
+        customDays.style.display = 'block';
+    } else {
+        customDays.style.display = 'none';
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    toggleCustomDays();
+});
+</script>
+{% endblock %}

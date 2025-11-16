@@ -1,0 +1,502 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .progress-header {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    color: white;
+    margin-bottom: 2rem;
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+  }
+
+  .progress-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-box {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+
+  .stat-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+  }
+
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  .chart-container {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+  }
+
+  .form-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+  }
+
+  .slider-container {
+    margin-bottom: 2rem;
+  }
+
+  .slider-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .slider-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #667eea;
+  }
+
+  .custom-range {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #ff6b6b 0%, #ffd93d 50%, #6bcf7f 100%);
+    outline: none;
+  }
+
+  .custom-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.5);
+  }
+
+  .custom-range::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.5);
+  }
+
+  .entry-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #667eea;
+    transition: all 0.3s ease;
+  }
+
+  .entry-card:hover {
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.15);
+    transform: translateX(5px);
+  }
+
+  .trend-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .trend-improving {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+  }
+
+  .trend-stable {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+  }
+
+  .trend-declining {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: white;
+  }
+
+  .metric-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+</style>
+
+<div class="progress-header animate__animated animate__fadeInDown">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1>📊 Track Your Skin Progress</h1>
+      <p class="mb-0" style="font-size: 1.1rem; opacity: 0.95;">Monitor your skin condition and satisfaction over time</p>
+    </div>
+    <div>
+      <a href="{% url 'dashboard' %}" class="btn btn-light btn-lg">← Dashboard</a>
+    </div>
+  </div>
+</div>
+
+<!-- Statistics Overview -->
+{% if stats %}
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="stat-box animate__animated animate__fadeInUp">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">😊</div>
+      <div class="stat-value">{{ stats.avg_satisfaction }}</div>
+      <div class="stat-label">Avg Satisfaction</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">✨</div>
+      <div class="stat-value">{{ stats.avg_condition }}</div>
+      <div class="stat-label">Avg Skin Condition</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
+      <div class="stat-value">{{ stats.total_entries }}</div>
+      <div class="stat-label">Total Entries</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+      <div class="stat-value">{{ stats.routine_compliance }}%</div>
+      <div class="stat-label">Routine Followed</div>
+    </div>
+  </div>
+</div>
+
+<!-- Trend Indicator -->
+{% if stats.trend %}
+<div class="alert animate__animated animate__fadeIn" style="border-radius: 1rem; border: none; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+  <div class="d-flex align-items-center justify-content-between">
+    <div>
+      <strong style="color: #667eea;">Trend Analysis:</strong>
+      <span class="ms-2">Your satisfaction is</span>
+      <span class="trend-badge trend-{{ stats.trend }} ms-2">
+        {% if stats.trend == 'improving' %}📈 Improving{% elif stats.trend == 'stable' %}➡️ Stable{% else %}📉 Needs Attention{% endif %}
+      </span>
+      <span class="ms-2">({{ stats.trend_diff }} point change)</span>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endif %}
+
+<!-- Charts -->
+<div class="chart-container animate__animated animate__fadeInUp">
+  <h3 style="color: #667eea; font-weight: 700; margin-bottom: 1.5rem;">📈 Progress Over Time</h3>
+  <canvas id="progressChart" style="max-height: 400px;"></canvas>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-6">
+    <div class="chart-container animate__animated animate__fadeInLeft">
+      <h4 style="color: #667eea; font-weight: 700; margin-bottom: 1.5rem;">💧 Skin Metrics</h4>
+      <canvas id="metricsChart" style="max-height: 300px;"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="chart-container animate__animated animate__fadeInRight">
+      <h4 style="color: #667eea; font-weight: 700; margin-bottom: 1.5rem;">😊 Satisfaction Trend</h4>
+      <canvas id="satisfactionChart" style="max-height: 300px;"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Log Today's Progress -->
+{% if not today_entry %}
+<div class="form-card animate__animated animate__fadeInUp">
+  <h3 style="color: #667eea; font-weight: 700; margin-bottom: 1.5rem;">📝 Log Today's Progress</h3>
+  <form method="post">
+    {% csrf_token %}
+    
+    <div class="slider-container">
+      <div class="slider-label">
+        <span>😊 Overall Satisfaction</span>
+        <span class="slider-value" id="satisfaction-value">5</span>
+      </div>
+      <input type="range" class="custom-range" name="satisfaction_rating" min="1" max="10" value="5" id="satisfaction-slider">
+      <div class="d-flex justify-content-between mt-1">
+        <small class="text-muted">Very Unsatisfied</small>
+        <small class="text-muted">Very Satisfied</small>
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <div class="slider-label">
+        <span>💧 Hydration Level</span>
+        <span class="slider-value" id="hydration-value">5</span>
+      </div>
+      <input type="range" class="custom-range" name="hydration_level" min="1" max="10" value="5" id="hydration-slider">
+      <div class="d-flex justify-content-between mt-1">
+        <small class="text-muted">Very Dry</small>
+        <small class="text-muted">Very Hydrated</small>
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <div class="slider-label">
+        <span>✨ Skin Clarity</span>
+        <span class="slider-value" id="clarity-value">5</span>
+      </div>
+      <input type="range" class="custom-range" name="clarity" min="1" max="10" value="5" id="clarity-slider">
+      <div class="d-flex justify-content-between mt-1">
+        <small class="text-muted">Poor</small>
+        <small class="text-muted">Excellent</small>
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <div class="slider-label">
+        <span>🎯 Breakouts (Higher = Less Breakouts)</span>
+        <span class="slider-value" id="breakouts-value">5</span>
+      </div>
+      <input type="range" class="custom-range" name="breakouts" min="1" max="10" value="5" id="breakouts-slider">
+      <div class="d-flex justify-content-between mt-1">
+        <small class="text-muted">Very Frequent</small>
+        <small class="text-muted">None</small>
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <div class="slider-label">
+        <span>🌸 Redness/Irritation (Higher = Less Red)</span>
+        <span class="slider-value" id="redness-value">5</span>
+      </div>
+      <input type="range" class="custom-range" name="redness" min="1" max="10" value="5" id="redness-slider">
+      <div class="d-flex justify-content-between mt-1">
+        <small class="text-muted">Very Red</small>
+        <small class="text-muted">No Redness</small>
+      </div>
+    </div>
+
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" name="routine_followed" id="routine-check" checked>
+      <label class="form-check-label" for="routine-check" style="font-weight: 600;">
+        I followed my skincare routine today
+      </label>
+    </div>
+
+    <div class="mb-3">
+      <label for="notes" class="form-label" style="font-weight: 600;">Additional Notes (Optional)</label>
+      <textarea class="form-control" name="notes" id="notes" rows="3" placeholder="Any observations about your skin today?"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-lg w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 0.75rem; font-weight: 600;">
+      💾 Save Today's Progress
+    </button>
+  </form>
+</div>
+{% else %}
+<div class="alert alert-success animate__animated animate__fadeIn" style="border-radius: 1rem;">
+  <strong>✅ You've already logged your progress today!</strong> Come back tomorrow to continue tracking.
+</div>
+{% endif %}
+
+<!-- Recent Entries -->
+{% if progress_entries %}
+<div class="mt-4">
+  <h3 style="color: #667eea; font-weight: 700; margin-bottom: 1.5rem;">📋 Recent Entries</h3>
+  {% for entry in progress_entries|slice:":10" %}
+  <div class="entry-card animate__animated animate__fadeInUp">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+      <div>
+        <strong style="color: #667eea; font-size: 1.1rem;">{{ entry.date|date:"F d, Y" }}</strong>
+        {% if entry.routine_followed %}
+        <span class="badge bg-success ms-2">✓ Routine Followed</span>
+        {% endif %}
+      </div>
+      <div>
+        <span class="metric-badge" style="background: rgba(102, 126, 234, 0.1); color: #667eea;">
+          😊 {{ entry.satisfaction_rating }}/10
+        </span>
+        <span class="metric-badge" style="background: rgba(40, 167, 69, 0.1); color: #28a745;">
+          ✨ {{ entry.overall_condition }}/10
+        </span>
+      </div>
+    </div>
+    <div class="mb-2">
+      <span class="metric-badge" style="background: rgba(0, 123, 255, 0.1); color: #007bff;">💧 Hydration: {{ entry.hydration_level }}</span>
+      <span class="metric-badge" style="background: rgba(255, 193, 7, 0.1); color: #ffc107;">✨ Clarity: {{ entry.clarity }}</span>
+      <span class="metric-badge" style="background: rgba(220, 53, 69, 0.1); color: #dc3545;">🎯 Breakouts: {{ entry.breakouts }}</span>
+      <span class="metric-badge" style="background: rgba(255, 87, 34, 0.1); color: #ff5722;">🌸 Redness: {{ entry.redness }}</span>
+    </div>
+    {% if entry.notes %}
+    <div class="mt-2 pt-2" style="border-top: 1px solid rgba(0, 0, 0, 0.1);">
+      <small class="text-muted"><strong>Notes:</strong> {{ entry.notes }}</small>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Update slider values dynamically
+  const sliders = [
+    {slider: 'satisfaction-slider', value: 'satisfaction-value'},
+    {slider: 'hydration-slider', value: 'hydration-value'},
+    {slider: 'clarity-slider', value: 'clarity-value'},
+    {slider: 'breakouts-slider', value: 'breakouts-value'},
+    {slider: 'redness-slider', value: 'redness-value'}
+  ];
+
+  sliders.forEach(item => {
+    const slider = document.getElementById(item.slider);
+    const valueDisplay = document.getElementById(item.value);
+    if (slider && valueDisplay) {
+      slider.addEventListener('input', function() {
+        valueDisplay.textContent = this.value;
+      });
+    }
+  });
+
+  // Chart data from Django
+  const chartData = {{ chart_data_json|safe }};
+
+  // Progress Chart (Main)
+  const ctx1 = document.getElementById('progressChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'line',
+    data: {
+      labels: chartData.dates,
+      datasets: [{
+        label: 'Overall Satisfaction',
+        data: chartData.satisfaction,
+        borderColor: 'rgb(102, 126, 234)',
+        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+        tension: 0.4,
+        fill: true
+      }, {
+        label: 'Overall Skin Condition',
+        data: chartData.overall,
+        borderColor: 'rgb(40, 167, 69)',
+        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 10,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+
+  // Metrics Chart
+  const ctx2 = document.getElementById('metricsChart').getContext('2d');
+  new Chart(ctx2, {
+    type: 'radar',
+    data: {
+      labels: ['Hydration', 'Clarity', 'Breakouts', 'Redness'],
+      datasets: [{
+        label: 'Latest Metrics',
+        data: [
+          chartData.hydration[chartData.hydration.length - 1] || 5,
+          chartData.clarity[chartData.clarity.length - 1] || 5,
+          chartData.breakouts[chartData.breakouts.length - 1] || 5,
+          chartData.redness[chartData.redness.length - 1] || 5
+        ],
+        borderColor: 'rgb(102, 126, 234)',
+        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 10,
+          ticks: {
+            stepSize: 2
+          }
+        }
+      }
+    }
+  });
+
+  // Satisfaction Chart
+  const ctx3 = document.getElementById('satisfactionChart').getContext('2d');
+  new Chart(ctx3, {
+    type: 'bar',
+    data: {
+      labels: chartData.dates,
+      datasets: [{
+        label: 'Daily Satisfaction',
+        data: chartData.satisfaction,
+        backgroundColor: 'rgba(102, 126, 234, 0.7)',
+        borderColor: 'rgb(102, 126, 234)',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 10,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}

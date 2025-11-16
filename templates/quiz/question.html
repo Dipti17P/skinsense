@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .quiz-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .quiz-header {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%),
+                url('https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=1200&q=80') center/cover;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quiz-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+    z-index: 1;
+  }
+
+  .quiz-header > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .progress-bar-custom {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: white;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+  }
+
+  .quiz-card {
+    border: none;
+    border-radius: 0 0 1.5rem 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 3rem;
+    background: white;
+  }
+
+  .option-item {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+  }
+
+  .option-item:hover {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+    transform: translateX(5px);
+  }
+
+  .option-item input[type="radio"]:checked + label {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+
+  .btn-next {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    padding: 1rem 3rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+  }
+
+  .question-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+</style>
+
+<div class="quiz-container">
+  <div class="quiz-header animate__animated animate__fadeInDown">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="badge" style="background: rgba(255, 255, 255, 0.3); padding: 0.5rem 1rem; font-size: 0.9rem;">
+        Question {{ current_number }} of {{ total_questions }}
+      </span>
+      <span style="font-size: 1.5rem;">💭</span>
+    </div>
+    <div class="progress-bar-custom">
+      <div class="progress-fill"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.progress-fill').style.width = '{{ progress_percentage }}%';
+    });
+  </script>
+
+  <div class="quiz-card animate__animated animate__fadeInUp">
+    <div class="text-center mb-4">
+      <div class="question-icon">🤔</div>
+      <h3 style="color: #333; font-weight: 600;">{{ question.text }}</h3>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="options-list">
+        {% for opt in question.options.all %}
+          <label class="option-item">
+            <div class="d-flex align-items-center">
+              <input type="radio" name="option" value="{{ opt.id }}" class="form-check-input me-3" required style="width: 20px; height: 20px;">
+              <span style="font-size: 1.05rem;">{{ opt.text }}</span>
+            </div>
+          </label>
+        {% endfor %}
+      </div>
+
+      <div class="text-center mt-5">
+        <button type="submit" class="btn btn-next">
+          {% if current_number == total_questions %}
+            ✨ Show My Results
+          {% else %}
+            Next Question →
+          {% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
